@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TicketRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
@@ -22,6 +23,7 @@ class Ticket
     #[ORM\Column]
     private ?\DateTimeImmutable $CloseAt = null;
 
+    #[Assert\Length(min: 20)]
     #[ORM\Column(length: 250)]
     private ?string $description = null;
 
