@@ -20,22 +20,19 @@ class HomeController extends AbstractController
         $ticket = new Ticket();
         $form = $this->createForm(ClientFormType::class,$ticket);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){  
-            $ticket->setCloseAt(new \DateTimeImmutable())
-            ->setResponsable("à definir")
-            ->setStatut('Nouveau');
+        if($form->isSubmitted()){  
+            // $ticket->setCloseAt(new \DateTimeImmutable());
+            // $ticket->setOpenAt(new \DateTimeImmutable());
             dd($ticket);
             // $em->persist($ticket);  
             // $em->flush();
-            $this->addFlash('sucess','le nouveau ticket à été ajouté');
+            // $this->addFlash('sucess','le nouveau ticket à été ajouté');
         return $this->redirectToRoute('index');
         }
         
 
 
-        // $user = new User();
-        // $user->setEmail("testUser@test.fr")->setPassword($hasher->hashPassword($user,'password12'))->setRoles([]);
-        // $em->persist($user);$em->flush();
+     
     
         return $this->render('home/index.html.twig', [
             'form' => $form,

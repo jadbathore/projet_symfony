@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Ticket;
-use DateTimeImmutable;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
@@ -26,7 +25,6 @@ class ClientFormType extends AbstractType
     {
         $builder
             ->add('auteur',EmailType::class)
-            ->add('CloseAt', DateType::class)
             ->add('description',TextareaType::class)
             ->add('categorie',ChoiceType::class,[
                 'choices' => [
@@ -52,14 +50,27 @@ class ClientFormType extends AbstractType
             ->add('envoyer',SubmitType::class,[
                 'label' => ' envoyer nouveau ticket'
             ])
-            ->addEventListener(FormEvents::POST_SUBMIT,$this->AddDateAuto(...))
+            ->addEventListener(FormEvents::POST_SUBMIT,$this->addAutoCompleteForClient(...))
         ;
+    
     }
-    public function AddDateAuto(PostSubmitEvent $event){
+
+    public function addAutoCompleteForClient(PostSubmitEvent $event){
         $data = $event->getData();
-        $data->setOpenAt(new DateTimeImmutable());
-        
-    }
+        if(empty($data->getId()))
+        {
+            $data->setResponsable('à definir');
+            $data->setStatut('Nouveau');
+            $data->setOpenAt(new \DateTimeImmutable());
+            $data->setCloseAt(new \DateTimeImmutable());
+        }
+        }
+//     public function addDateAuto(PostSubmitEvent $event)
+//     {
+//         $data = $event->getData();
+//         $data->setOpenAt(new \DateTimeImmutable());
+//         $data->setCloseAt(new \DateTimeImmutable());
+// }
 
 
     public function configureOptions(OptionsResolver $resolver): void
