@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+{{form_start(form)}}
+{{form_row(form.responsable)}}
+{{form_row(form.CloseAt)}}
+{{form_row(form.statut)}}
+{{form_row(form.envoyer)}}
+{{form_end(form,{render_rest: false})}}
+{% endblock %}

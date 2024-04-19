@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminUserController!{% endblock %}
+{% block title %}{% endblock %}
 
 {% block body %}
 
@@ -21,13 +21,8 @@
             <td>{{ datas.responsable }}</td>
             <td>
             <div class="d-flex gap-1">
-                <a class="btn btn-primary" href="{{ path('admin.edit',{id:datas.id}) }}">edit</a>
-                <form action="{{ path('admin.delete', {id: datas.id}) }}" method="post">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit" class="btn btn-danger">supprimé</button>
-                </form>
+                <a class="btn btn-primary" href="{{ path('ticket.edit',{id:datas.id}) }}">edit</a>
             </div>
-           
             </td>
         </tr>
         {% endfor %}

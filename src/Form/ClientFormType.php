@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Ticket;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -24,8 +25,12 @@ class ClientFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('auteur',EmailType::class)
-            ->add('description',TextareaType::class)
+            ->add('auteur',EmailType::class,[
+                'empty_data' => ''
+            ])
+            ->add('description',TextareaType::class,[
+                'empty_data' => ''
+            ])
             ->add('categorie',ChoiceType::class,[
                 'choices' => [
                     'Incident' => 'Incident',
@@ -35,24 +40,8 @@ class ClientFormType extends AbstractType
                     'Information' => 'information'
                 ],
             ])
-            ->add('statut',ChoiceType::class,[
-                'choices' => [
-                    'Nouveau'=> 'Nouveau',
-                    'Ouvert' => 'Ouvert',
-                    'Résolu ' => 'Résolu',
-                    'Fermé' => 'Fermé',
-                ],
-            ])
-
-            ->add('responsable',TextType::class,[
-                'empty_data' => ''
-            ])
-            ->add('envoyer',SubmitType::class,[
-                'label' => ' envoyer nouveau ticket'
-            ])
             ->addEventListener(FormEvents::POST_SUBMIT,$this->addAutoCompleteForClient(...))
         ;
-    
     }
 
     public function addAutoCompleteForClient(PostSubmitEvent $event){
@@ -65,12 +54,6 @@ class ClientFormType extends AbstractType
             $data->setCloseAt(new \DateTimeImmutable());
         }
         }
-//     public function addDateAuto(PostSubmitEvent $event)
-//     {
-//         $data = $event->getData();
-//         $data->setOpenAt(new \DateTimeImmutable());
-//         $data->setCloseAt(new \DateTimeImmutable());
-// }
 
 
     public function configureOptions(OptionsResolver $resolver): void

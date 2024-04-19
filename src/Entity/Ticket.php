@@ -23,18 +23,18 @@ class Ticket
     #[ORM\Column]
     private ?\DateTimeImmutable $CloseAt = null;
 
-    #[Assert\Length(min: 20)]
-    #[ORM\Column(length: 250)]
+    #[Assert\Length(min: 20,max:250)]
+    #[ORM\Column(length: 255)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $categorie = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $statut = null;
+    private string $categorie = '';
 
     #[ORM\Column(length: 255)]
-    private ?string $responsable = null;
+    private string $statut = '';
+
+    #[ORM\Column(length: 255)]
+    private string $responsable = '';
 
     public function getId(): ?int
     {

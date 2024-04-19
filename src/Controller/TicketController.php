@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\Ticket;
+use App\Entity\User;
 use App\Form\ClientFormType;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,23 +14,26 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-#[Route('/admin', name: 'admin.')]
-class AdminUserController extends AbstractController
+
+#[Route('/ticket', name: 'ticket.')]
+class TicketController extends AbstractController
 {
     #[Route('/', name: 'index')]
     public function index(TicketRepository $respository,TokenInterface $token): Response
     {
         $user = $token->getUser();
-        if (in_array('ROLE_USER', $user->getRoles())) {
+        if (in_array('ADMINISATOR', $user->getRoles())) {
             return $this->redirectToRoute('ticket.index');
         }
-        $this->denyAccessUnlessGranted('ADMINISATOR');
+
+    $this->denyAccessUnlessGranted('ROLE_USER');
         $data = $respository->findAll();
-        return $this->render('admin_user/index.html.twig', [
+        return $this->render('ticket/index.html.twig', [
             'controller_name' => 'AdminUserController',
             'data' => $data
         ]);
@@ -43,16 +46,15 @@ class AdminUserController extends AbstractController
         ):Response
     {
 
-    $form = $this->createForm(ClientFormType::class,$ticket)->add('statut',ChoiceType::class,[
+    $form = $this->createForm(ClientFormType::class,$ticket)
+    ->add('statut',ChoiceType::class,[
             'choices' => [
                 'Nouveau'=> 'Nouveau',
                 'Ouvert' => 'Ouvert',
                 'Résolu ' => 'Résolu',
                 'Fermé' => 'Fermé',
-            ],
-            'empty_data' => ''
+            ]
         ])
-
         ->add('responsable',TextType::class,[
             'empty_data' => ''
         ])
@@ -66,21 +68,12 @@ class AdminUserController extends AbstractController
     $em->persist($ticket);
     $em->flush();
 
-    return $this->redirectToRoute('admin.index');
+    return $this->redirectToRoute('ticket.index');
     }
-        return $this->render('admin_user/edit.html.twig', [
+        return $this->render('ticket/edit.html.twig', [
             'controller_name' => 'AdminUserController',
             'form' => $form
         ]);
     }
-
-    
-#[Route('/{id}', name:'delete', methods:['DELETE'])]
-public function delete(Ticket $ticket,EntityManagerInterface $em)
-{
-$em->remove($ticket);
-$em->flush();
-return $this->redirectToRoute('admin.index');
-}
 
 }
